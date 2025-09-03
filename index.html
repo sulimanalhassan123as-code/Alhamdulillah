@@ -1,180 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dhikr Counter</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #d4fc79, #96e6a1);
       text-align: center;
-      padding: 20px;
+      background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin-top: 50px;
     }
     h1 {
+      font-size: 2.5em;
       color: #2e7d32;
     }
+    #counter {
+      font-size: 3em;
+      margin: 20px 0;
+      color: #1565c0;
+    }
     button {
-      margin: 10px;
+      font-size: 1.2em;
       padding: 10px 20px;
-      font-size: 16px;
+      margin: 10px;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: #388e3c;
+      border-radius: 8px;
+      background-color: #43a047;
       color: white;
+      cursor: pointer;
+      transition: background 0.3s;
     }
     button:hover {
       background-color: #2e7d32;
     }
-    #counter {
-      font-size: 48px;
-      margin: 20px;
-      font-weight: bold;
-      color: #1b5e20;
+    .progress-container {
+      width: 80%;
+      margin: 20px auto;
+      background: #c8e6c9;
+      border-radius: 20px;
+      overflow: hidden;
     }
-    #progress-bar {
-      width: 100%;
-      background-color: #eee;
-      border-radius: 10px;
-      height: 20px;
-      margin: 20px 0;
-    }
-    #progress {
-      height: 100%;
-      width: 0;
+    .progress-bar {
+      height: 25px;
       background: #4caf50;
-      border-radius: 10px;
+      width: 0%;
       transition: width 0.3s;
     }
     #popup {
-      display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      font-size: 24px;
+      background: rgba(0,0,0,0.6);
+      display: none;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      z-index: 10;
+    }
+    #popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.5em;
+      color: #2e7d32;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
     }
     .balloon {
-      position: absolute;
-      bottom: -100px;
-      width: 30px;
-      height: 40px;
+      position: fixed;
+      bottom: -150px;
+      width: 50px;
+      height: 70px;
       border-radius: 50%;
-      opacity: 0.7;
-      animation: rise 7s linear forwards;
+      background-color: red;
+      animation: rise 6s linear forwards;
     }
     @keyframes rise {
-      to {
-        transform: translateY(-110vh);
-      }
+      from {bottom: -150px; opacity: 1;}
+      to {bottom: 100%; opacity: 0;}
     }
     footer {
-      margin-top: 40px;
-      font-size: 18px;
+      margin-top: 50px;
       font-weight: bold;
+      color: #424242;
     }
   </style>
 </head>
 <body>
-  <h1>Dhikr Counter</h1>
-
-  <div id="setup">
-    <p>Choose your dhikr plan:</p>
-    <button onclick="setDefaultPlan()">Use Default (100)</button><br>
-    <input id="customTarget" type="number" placeholder="Enter your custom number">
-    <button onclick="setCustomPlan()">Use Custom</button>
+  <div class="container">
+    <h1>Dhikr Counter</h1>
+    <div id="setup">
+      <p>Choose your dhikr plan:</p>
+      <button onclick="setDefaultPlan()">Use Default (100)</button>
+      <br/><br/>
+      <input type="number" id="customTarget" placeholder="Enter custom target" />
+      <button onclick="setCustomPlan()">Use Custom</button>
+    </div><div id="counter-area" style="display:none;">
+  <div id="counter">0</div>
+  <button onclick="increment()">Count Dhikr</button>
+  <div class="progress-container">
+    <div id="progress" class="progress-bar"></div>
   </div>
+</div>
 
-  <div id="counter-area" style="display:none;">
-    <div id="counter">0</div>
-    <div id="progress-bar"><div id="progress"></div></div>
-    <button onclick="increment()">+1 Dhikr</button>
-  </div>
-
-  <div id="popup">
-    <p>🎉 Congratulations! You have completed your dhikr for today 🎉</p>
-    <button onclick="restart()">Start Again</button>
-  </div>
-
-  <footer>This site was created by <b>Suleiman Alhassan</b></footer>
-
-  <script>
+  </div>  <div id="popup">
+    <div id="popup-content">
+      🎉 Congratulations! You have completed your dhikr for today!
+      <br/><br/>
+      <button onclick="restart()">Start Again</button>
+    </div>
+  </div>  <footer>
+    This site was created by <b>Suleiman Alhassan</b>
+  </footer>  <script>
     let count = 0;
     let target = 0;
 
-    function setDefaultPlan() {
+    function setDefaultPlan(){
       target = 100;
-      showCounterArea();
-      update();
+      document.getElementById('setup').style.display = 'none';
+      document.getElementById('counter-area').style.display = 'block';
+      updateProgress();
     }
 
-    function setCustomPlan() {
-      const val = parseInt(document.getElementById('customTarget').value, 10);
-      if (Number.isFinite(val) && val > 0) {
-        target = val;
-        showCounterArea();
-        update();
+    function setCustomPlan(){
+      const val = document.getElementById('customTarget').value;
+      if(val && val > 0){
+        target = parseInt(val);
+        document.getElementById('setup').style.display = 'none';
+        document.getElementById('counter-area').style.display = 'block';
+        updateProgress();
       } else {
         alert('Please enter a valid number!');
       }
     }
 
-    function showCounterArea() {
-      document.getElementById('setup').style.display = 'none';
-      document.getElementById('counter-area').style.display = 'block';
-    }
-
-    function increment() {
-      if (count < target) {
+    function increment(){
+      if(count < target){
         count++;
-        update();
-        if (count === target) celebrate();
+        document.getElementById('counter').innerText = count;
+        updateProgress();
+        if(count === target){
+          celebrate();
+        }
       }
     }
 
-    function update() {
-      document.getElementById('counter').textContent = count;
-      const percent = target ? (count / target) * 100 : 0;
+    function updateProgress(){
+      const percent = (count / target) * 100;
       document.getElementById('progress').style.width = percent + '%';
     }
 
-    function celebrate() {
-      const popup = document.getElementById('popup');
-      popup.style.display = 'flex';
-      for (let i = 0; i < 25; i++) createBalloon();
+    function celebrate(){
+      document.getElementById('popup').style.display = 'flex';
+      for(let i=0; i<20; i++){
+        createBalloon();
+      }
     }
 
-    function createBalloon() {
-      const b = document.createElement('div');
-      b.className = 'balloon';
-      b.style.left = Math.random() * 100 + 'vw';
-      b.style.backgroundColor = randomColor();
-      b.style.transform = `scale(${0.7 + Math.random() * 0.8})`;
-      b.style.animationDuration = (5 + Math.random() * 3) + 's';
-      document.body.appendChild(b);
-      setTimeout(() => b.remove(), 9000);
+    function createBalloon(){
+      const balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+      balloon.style.left = Math.random() * 100 + 'vw';
+      balloon.style.backgroundColor = randomColor();
+      document.body.appendChild(balloon);
+      setTimeout(() => balloon.remove(), 6000);
     }
 
-    function randomColor() {
-      const colors = ['#f44336','#e91e63','#9c27b0','#3f51b5','#2196f3','#009688','#4caf50','#ff9800','#795548'];
+    function randomColor(){
+      const colors = ['#f44336','#e91e63','#9c27b0','#2196f3','#4caf50','#ff9800','#795548'];
       return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    function restart() {
+    function restart(){
       count = 0;
+      document.getElementById('counter').innerText = count;
+      updateProgress();
       document.getElementById('popup').style.display = 'none';
-      update();
     }
-
-    document.addEventListener('DOMContentLoaded', update);
-  </script>
-</body>
-  </html>
+  </script></body>
+</html>
