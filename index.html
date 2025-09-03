@@ -1,106 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dhikr Counter</title>
-
   <style>
     body {
-      text-align: center;
       font-family: Arial, sans-serif;
-      background: #f0f8ff;
+      text-align: center;
+      background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+      margin: 0;
+      padding: 0;
     }
-
+    .container {
+      margin-top: 50px;
+    }
     h1 {
-      margin-top: 20px;
+      font-size: 2.5em;
+      color: #2e7d32;
     }
-
-    #count {
-      font-size: 2em;
-      margin: 20px;
-      color: darkblue;
+    #counter {
+      font-size: 3em;
+      margin: 20px 0;
+      color: #1565c0;
     }
-
     button {
-      margin-top: 20px;
-      padding: 10px 20px;
       font-size: 1.2em;
+      padding: 10px 20px;
+      margin: 10px;
       border: none;
       border-radius: 8px;
-      background-color: gold;
+      background-color: #43a047;
+      color: white;
       cursor: pointer;
+      transition: background 0.3s;
     }
-
-    /* Balloons */
-    .balloon {
-      position: absolute;
-      bottom: -100px;
-      width: 40px;
-      height: 60px;
-      background: red;
-      border-radius: 50% 50% 50% 50%;
-      animation: floatUp 6s linear forwards;
-      z-index: 1;
+    button:hover {
+      background-color: #2e7d32;
     }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(-120vh); opacity: 0; }
+    .progress-container {
+      width: 80%;
+      margin: 20px auto;
+      background: #c8e6c9;
+      border-radius: 20px;
+      overflow: hidden;
     }
-
-    /* Congratulations message */
-    #congrats {
-      font-size: 2em;
-      color: lightgreen;
-      margin-top: 20px;
-      font-weight: bold;
+    .progress-bar {
+      height: 25px;
+      background: #4caf50;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    #popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
       display: none;
-      position: relative;
-      z-index: 10; /* stays above balloons */
-      text-shadow: 0 0 10px #00ff00;
+      justify-content: center;
+      align-items: center;
+    }
+    #popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.5em;
+      color: #2e7d32;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+    .balloon {
+      position: fixed;
+      bottom: -150px;
+      width: 50px;
+      height: 70px;
+      border-radius: 50%;
+      background-color: red;
+      animation: rise 6s linear forwards;
+    }
+    @keyframes rise {
+      from {bottom: -150px; opacity: 1;}
+      to {bottom: 100%; opacity: 0;}
+    }
+    footer {
+      margin-top: 50px;
+      font-weight: bold;
+      color: #424242;
     }
   </style>
 </head>
 <body>
-  <h1>Alhamdulillah Dhikr Counter</h1>
-  <p id="count">Count: 0</p>
-  <button onclick="incrementCount()">Start Dhikr</button>
-  <p id="congrats">🎉 Congratulations! You have completed for today. 🎉</p>
+  <div class="container">
+    <h1>Dhikr Counter</h1>
+    <div id="setup">
+      <p>Choose your dhikr plan:</p>
+      <button onclick="setDefaultPlan()">Use Default (100)</button>
+      <br/><br/>
+      <input type="number" id="customTarget" placeholder="Enter custom target" />
+      <button onclick="setCustomPlan()">Use Custom</button>
+    </div><div id="counter-area" style="display:none;">
+  <div id="counter">0</div>
+  <button onclick="increment()">Count Dhikr</button>
+  <div class="progress-container">
+    <div id="progress" class="progress-bar"></div>
+  </div>
+</div>
 
-  <script>
+  </div>  <div id="popup">
+    <div id="popup-content">
+      🎉 Congratulations! You have completed your dhikr for today!
+      <br/><br/>
+      <button onclick="restart()">Start Again</button>
+    </div>
+  </div>  <footer>
+    This site was created by <b>Suleiman Alhassan</b>
+  </footer>  <script>
     let count = 0;
-    const maxCount = 33; // after 33, show message
-    const countEl = document.getElementById("count");
-    const congratsEl = document.getElementById("congrats");
+    let target = 0;
 
-    function incrementCount() {
-      if (count < maxCount) {
+    function setDefaultPlan(){
+      target = 100;
+      document.getElementById('setup').style.display = 'none';
+      document.getElementById('counter-area').style.display = 'block';
+      updateProgress();
+    }
+
+    function setCustomPlan(){
+      const val = document.getElementById('customTarget').value;
+      if(val && val > 0){
+        target = parseInt(val);
+        document.getElementById('setup').style.display = 'none';
+        document.getElementById('counter-area').style.display = 'block';
+        updateProgress();
+      } else {
+        alert('Please enter a valid number!');
+      }
+    }
+
+    function increment(){
+      if(count < target){
         count++;
-        countEl.innerText = "Count: " + count;
-      }
-      if (count === maxCount) {
-        congratsEl.style.display = "block";
-        launchBalloons();
-      }
-    }
-
-    function launchBalloons() {
-      for (let i = 0; i < 20; i++) {
-        let balloon = document.createElement("div");
-        balloon.className = "balloon";
-        balloon.style.left = Math.random() * 100 + "vw";
-        balloon.style.background = getRandomColor();
-        document.body.appendChild(balloon);
-
-        setTimeout(() => balloon.remove(), 6000);
+        document.getElementById('counter').innerText = count;
+        updateProgress();
+        if(count === target){
+          celebrate();
+        }
       }
     }
 
-    function getRandomColor() {
-      const colors = ["red", "blue", "green", "yellow", "purple", "pink", "orange"];
-      return colors[Math.floor(Math.random() * colors.length)];
+    function updateProgress(){
+      const percent = (count / target) * 100;
+      document.getElementById('progress').style.width = percent + '%';
     }
-  </script>
-</body>
-</html>
+
+    function celebrate(){
+      document.getElementById('popup').style.display = 'flex';
+      for(let i=0; i<20; i++){
+        createBalloon();
+      }
+    }
+
+    function createBalloon(){
+      const balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+      balloon.style.left = Math.random() * 100 + 'vw';
+      balloon.style.backgroundColor = randomColor
