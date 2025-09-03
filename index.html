@@ -4,11 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dhikr Counter</title>
+
   <style>
     body {
       text-align: center;
       font-family: Arial, sans-serif;
       background: #f0f8ff;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    #count {
+      font-size: 2em;
+      margin: 20px;
+      color: darkblue;
     }
 
     button {
@@ -21,7 +32,7 @@
       cursor: pointer;
     }
 
-    /* Balloon style */
+    /* Balloons */
     .balloon {
       position: absolute;
       bottom: -100px;
@@ -30,7 +41,7 @@
       background: red;
       border-radius: 50% 50% 50% 50%;
       animation: floatUp 6s linear forwards;
-      z-index: 1; /* behind text */
+      z-index: 1;
     }
 
     @keyframes floatUp {
@@ -38,6 +49,7 @@
       100% { transform: translateY(-120vh); opacity: 0; }
     }
 
+    /* Congratulations message */
     #congrats {
       font-size: 2em;
       color: lightgreen;
@@ -45,8 +57,50 @@
       font-weight: bold;
       display: none;
       position: relative;
-      z-index: 10; /* always above balloons */
-      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; /* glowing */
+      z-index: 10; /* stays above balloons */
+      text-shadow: 0 0 10px #00ff00;
     }
   </style>
 </head>
+<body>
+  <h1>Alhamdulillah Dhikr Counter</h1>
+  <p id="count">Count: 0</p>
+  <button onclick="incrementCount()">Start Dhikr</button>
+  <p id="congrats">🎉 Congratulations! You have completed for today. 🎉</p>
+
+  <script>
+    let count = 0;
+    const maxCount = 33; // after 33, show message
+    const countEl = document.getElementById("count");
+    const congratsEl = document.getElementById("congrats");
+
+    function incrementCount() {
+      if (count < maxCount) {
+        count++;
+        countEl.innerText = "Count: " + count;
+      }
+      if (count === maxCount) {
+        congratsEl.style.display = "block";
+        launchBalloons();
+      }
+    }
+
+    function launchBalloons() {
+      for (let i = 0; i < 20; i++) {
+        let balloon = document.createElement("div");
+        balloon.className = "balloon";
+        balloon.style.left = Math.random() * 100 + "vw";
+        balloon.style.background = getRandomColor();
+        document.body.appendChild(balloon);
+
+        setTimeout(() => balloon.remove(), 6000);
+      }
+    }
+
+    function getRandomColor() {
+      const colors = ["red", "blue", "green", "yellow", "purple", "pink", "orange"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+  </script>
+</body>
+</html>
