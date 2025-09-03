@@ -3,91 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Words of Allah</title>
+  <title>Dhikr Counter</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
       color: white;
       margin: 0;
       padding: 0;
     }
-    header {
-      padding: 20px;
-    }
-    header img {
-      width: 100px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-    header h1 {
-      font-size: 1.8rem;
-      margin: 0;
-      color: #ffcc00;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-    .container {
-      margin-top: 20px;
-    }
-    .counter {
-      font-size: 1.5rem;
-      margin: 15px 0;
-    }
-    button {
-      font-size: 1.2rem;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 25px;
-      background: #ffcc00;
-      color: #333;
-      cursor: pointer;
-      box-shadow: 0px 4px 8px rgba(0,0,0,0.4);
-      transition: transform 0.2s;
-    }
-    button:hover {
-      transform: scale(1.1);
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <img src="logo.png" alt="Logo">
-    <h1>This site was created by Suleiman Alhassan</h1>
-  </header>
-
-  <div class="container">
-    <h2>Tap to Count Your Dhikr</h2>
-    <p class="counter" id="dhikrText">Subhanallah: 0/33</p>
-    <button onclick="tap()">Tap</button>
-  </div>
-
-  <!-- Add your audio file here -->
-  <audio id="completeAudio" src="alhamdulillah.mp3"></audio>
-
-  <script>
-    const phrases = [
-      { text: "Subhanallah", max: 33 },
-      { text: "Alhamdulillah", max: 33 },
-      { text: "Allahu Akbar", max: 34 }
-    ];
-    let currentPhrase = 0;
-    let count = 0;
-
-    function tap() {
-      count++;
-      if (count > phrases[currentPhrase].max) {
-        currentPhrase++;
-        count = 1;
-      }
-      if (currentPhrase >= phrases.length) {
-        document.getElementById("dhikrText").textContent = "MashaAllah! You have completed your Dhikr.";
-        document.getElementById("completeAudio").play(); // play sound at the end
-        return;
-      }
-      document.getElementById("dhikrText").textContent =
-        `${phrases[currentPhrase].text}: ${count}/${phrases[currentPhrase].max}`;
-    }
-  </script>
-</body>
-</html> <audio id="completeAudio" src="alhamdulillah.mp3" loop></audio>
