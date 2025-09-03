@@ -3,98 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suleiman Alhassan — Dhikr Game</title>
+  <title>The Words of Allah</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: white;
       margin: 0;
       padding: 0;
     }
     header {
-      font-size: 24px;
-      font-weight: bold;
       padding: 20px;
-      background: rgba(0,0,0,0.3);
+    }
+    header img {
+      width: 100px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      margin: 0;
+      color: #ffcc00;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    .container {
+      margin-top: 20px;
     }
     .counter {
-      margin: 20px;
-      font-size: 20px;
-      font-weight: bold;
+      font-size: 1.5rem;
+      margin: 15px 0;
     }
     button {
-      padding: 20px 40px;
-      font-size: 22px;
-      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 15px 30px;
       border: none;
-      border-radius: 50%;
-      background: radial-gradient(circle, #00c6ff, #0072ff);
-      color: white;
+      border-radius: 25px;
+      background: #ffcc00;
+      color: #333;
       cursor: pointer;
-      transition: 0.3s;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
     }
     button:hover {
       transform: scale(1.1);
-      background: radial-gradient(circle, #0072ff, #00c6ff);
-    }
-    .dhikr {
-      font-size: 28px;
-      margin: 20px 0;
-      font-weight: bold;
-      color: #ffeb3b;
     }
   </style>
 </head>
 <body>
-  <header>Suleiman Alhassan</header>
-  <h2>The Words of Allah</h2>
+  <header>
+    <img src="logo.png" alt="Logo">
+    <h1>This site was created by Suleiman Alhassan</h1>
+  </header>
 
-  <div class="dhikr" id="dhikrText">Click Start</div>
-  <div class="counter">
-    Count: <span id="count">0</span> / <span id="limit">33</span>
+  <div class="container">
+    <h2>Tap to Count Your Dhikr</h2>
+    <p class="counter" id="dhikrText">Subhanallah: 0/33</p>
+    <button onclick="tap()">Tap</button>
   </div>
-  <button id="tapBtn">Start</button>
+
+  <!-- Add your audio file here -->
+  <audio id="completeAudio" src="alhamdulillah.mp3"></audio>
 
   <script>
     const phrases = [
-      "Subhanallah",
-      "Alhamdulillah",
-      "Allahu Akbar"
+      { text: "Subhanallah", max: 33 },
+      { text: "Alhamdulillah", max: 33 },
+      { text: "Allahu Akbar", max: 34 }
     ];
     let currentPhrase = 0;
     let count = 0;
-    const limit = 33;
 
-    const tapBtn = document.getElementById("tapBtn");
-    const countEl = document.getElementById("count");
-    const limitEl = document.getElementById("limit");
-    const dhikrText = document.getElementById("dhikrText");
-
-    limitEl.textContent = limit;
-
-    tapBtn.addEventListener("click", () => {
-      if (count === 0 && currentPhrase === 0) {
-        dhikrText.textContent = phrases[currentPhrase];
-        tapBtn.textContent = "Tap";
-      }
-
+    function tap() {
       count++;
-      countEl.textContent = count;
-
-      if (count >= limit) {
+      if (count > phrases[currentPhrase].max) {
         currentPhrase++;
-        if (currentPhrase < phrases.length) {
-          dhikrText.textContent = phrases[currentPhrase];
-          count = 0;
-          countEl.textContent = 0;
-        } else {
-          dhikrText.textContent = "MashaAllah! Dhikr Complete 🌙";
-          tapBtn.disabled = true;
-        }
+        count = 1;
       }
-    });
+      if (currentPhrase >= phrases.length) {
+        document.getElementById("dhikrText").textContent = "MashaAllah! You have completed your Dhikr.";
+        document.getElementById("completeAudio").play(); // play sound at the end
+        return;
+      }
+      document.getElementById("dhikrText").textContent =
+        `${phrases[currentPhrase].text}: ${count}/${phrases[currentPhrase].max}`;
+    }
   </script>
 </body>
-  </html>
+</html>
