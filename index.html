@@ -11,18 +11,10 @@
       background: linear-gradient(to bottom, #f0f8ff, #dbeafe);
       padding: 20px;
     }
-    .logo {
-      margin-top: 20px;
-    }
-    .logo img {
-      width: 200px;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
     h1 {
       font-size: 2.5em;
       color: #2563eb;
-      margin-top: 15px;
+      margin-top: 30px;
     }
     p {
       font-size: 1.2em;
@@ -46,21 +38,14 @@
   </style>
 </head>
 <body>
-  <div class="logo">
-    <img src="logo.png" alt="Suleiman Alhassan Logo">
-  </div>
   <h1>Alhamdulillah</h1>
-  <p>Click the button below to complete and listen:</p>
+  <p>Click the button below:</p>
 
-  <button class="button" onclick="playAudio()">Complete</button>
-
-  <audio id="dhikrAudio" src="subhanallahi-wa-bihamdihi-with-reverb-301504.mp3"></audio>
+  <button class="button" onclick="sayAlhamdulillah()">Complete</button>
 
   <script>
-    function playAudio() {
-      var audio = document.getElementById("dhikrAudio");
-      audio.play();
-      alert("Alhamdulillah! Audio is now playing.");
+    function sayAlhamdulillah() {
+      alert("Alhamdulillah! All praise is due to Allah.");
     }
   </script>
 </body>
