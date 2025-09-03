@@ -12,6 +12,7 @@
       color: white;
       margin: 0;
       padding: 0;
+      overflow: hidden;
     }
     h1 {
       margin-top: 20px;
@@ -45,6 +46,27 @@
     button:hover {
       background-color: #FFD700;
     }
+    /* Balloon style */
+    .balloon {
+      position: absolute;
+      bottom: -100px;
+      width: 40px;
+      height: 60px;
+      background: red;
+      border-radius: 50% 50% 50% 50%;
+      animation: floatUp 6s linear forwards;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-120vh); opacity: 0; }
+    }
+    #congrats {
+      font-size: 1.5em;
+      color: lightgreen;
+      margin-top: 20px;
+      font-weight: bold;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -56,7 +78,9 @@
 
   <button onclick="countDhikr()">Tap</button>
 
-  <!-- Audio file (you can replace 'alhamdulillah.mp3' with your own file) -->
+  <p id="congrats">🎉 Congratulations! You have completed your dhikr for today 🎉</p>
+
+  <!-- Audio for full completion -->
   <audio id="endAudio" src="alhamdulillah.mp3"></audio>
 
   <script>
@@ -72,19 +96,52 @@
       if (count > 33) {
         count = 1;
         phraseIndex++;
-        if (phraseIndex >= phrases.length) {
-          phraseIndex = 0; // reset to Subhanallah
-        }
       }
 
-      // When full cycle (99) is complete → play Alhamdulillah
-      if (totalCount >= 99) {
+      // When all 3 are completed (99 total)
+      if (phraseIndex >= phrases.length) {
+        phraseIndex = 0; 
+        totalCount = 0;
+
+        // Play audio
         document.getElementById("endAudio").play();
-        totalCount = 0; // reset total after each full cycle
+
+        // Show congratulations
+        document.getElementById("congrats").style.display = "block";
+        launchBalloons();
+
+        // Ask to continue
+        setTimeout(() => {
+          if (confirm("You have completed your dhikr for today. Would you like to continue?")) {
+            phraseIndex = 0;
+            count = 0;
+            document.getElementById("congrats").style.display = "none";
+          }
+        }, 500);
       }
 
       document.getElementById("dhikr").innerText = phrases[phraseIndex];
       document.getElementById("count").innerText = count;
+    }
+
+    // 🎈 Balloons function
+    function launchBalloons() {
+      for (let i = 0; i < 15; i++) {
+        let balloon = document.createElement("div");
+        balloon.className = "balloon";
+        balloon.style.left = Math.random() * 100 + "vw";
+        balloon.style.background = getRandomColor();
+        document.body.appendChild(balloon);
+
+        setTimeout(() => {
+          balloon.remove();
+        }, 6000);
+      }
+    }
+
+    function getRandomColor() {
+      const colors = ["red", "blue", "green", "yellow", "pink", "orange", "purple"];
+      return colors[Math.floor(Math.random() * colors.length)];
     }
   </script>
 </body>
