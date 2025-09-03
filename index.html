@@ -1,168 +1,82 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dhikr Counter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: linear-gradient(to right, #e0f7fa, #f1f8e9);
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      margin-top: 50px;
-    }
-    h1 {
-      font-size: 2.5em;
-      color: #2e7d32;
-    }
-    #counter {
-      font-size: 3em;
-      margin: 20px 0;
-      color: #1565c0;
-    }
-    button {
-      font-size: 1.2em;
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 8px;
-      background-color: #43a047;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background-color: #2e7d32;
-    }
-    .progress-container {
-      width: 80%;
-      margin: 20px auto;
-      background: #c8e6c9;
-      border-radius: 20px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 25px;
-      background: #4caf50;
-      width: 0%;
-      transition: width 0.3s;
-    }
-    #popup {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
-    #popup-content {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 1.5em;
-      color: #2e7d32;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-    }
-    .balloon {
-      position: fixed;
-      bottom: -150px;
-      width: 50px;
-      height: 70px;
-      border-radius: 50%;
-      background-color: red;
-      animation: rise 6s linear forwards;
-    }
-    @keyframes rise {
-      from {bottom: -150px; opacity: 1;}
-      to {bottom: 100%; opacity: 0;}
-    }
-    footer {
-      margin-top: 50px;
-      font-weight: bold;
-      color: #424242;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Dhikr Counter</h1>
-    <div id="setup">
-      <p>Choose your dhikr plan:</p>
-      <button onclick="setDefaultPlan()">Use Default (100)</button>
-      <br/><br/>
-      <input type="number" id="customTarget" placeholder="Enter custom target" />
-      <button onclick="setCustomPlan()">Use Custom</button>
-    </div><div id="counter-area" style="display:none;">
-  <div id="counter">0</div>
-  <button onclick="increment()">Count Dhikr</button>
-  <div class="progress-container">
-    <div id="progress" class="progress-bar"></div>
-  </div>
-</div>
+<script>
+  let count = 0;
+  let target = 0;
 
-  </div>  <div id="popup">
-    <div id="popup-content">
-      🎉 Congratulations! You have completed your dhikr for today!
-      <br/><br/>
-      <button onclick="restart()">Start Again</button>
-    </div>
-  </div>  <footer>
-    This site was created by <b>Suleiman Alhassan</b>
-  </footer>  <script>
-    let count = 0;
-    let target = 0;
+  function setDefaultPlan() {
+    target = 100;                 // default SubhanAllah 33 + Alhamdulillah 33 + Allahu Akbar 34
+    showCounterArea();
+    update();
+  }
 
-    function setDefaultPlan(){
-      target = 100;
-      document.getElementById('setup').style.display = 'none';
-      document.getElementById('counter-area').style.display = 'block';
-      updateProgress();
+  function setCustomPlan() {
+    const val = parseInt(document.getElementById('customTarget').value, 10);
+    if (Number.isFinite(val) && val > 0) {
+      target = val;
+      showCounterArea();
+      update();
+    } else {
+      alert('Please enter a valid number!');
     }
+  }
 
-    function setCustomPlan(){
-      const val = document.getElementById('customTarget').value;
-      if(val && val > 0){
-        target = parseInt(val);
-        document.getElementById('setup').style.display = 'none';
-        document.getElementById('counter-area').style.display = 'block';
-        updateProgress();
-      } else {
-        alert('Please enter a valid number!');
-      }
+  function showCounterArea() {
+    const setup = document.getElementById('setup');
+    const area  = document.getElementById('counter-area');
+    if (setup) setup.style.display = 'none';
+    if (area)  area.style.display  = 'block';
+  }
+
+  function increment() {
+    if (!target) {
+      alert('Please choose a plan first.');
+      return;
     }
-
-    function increment(){
-      if(count < target){
-        count++;
-        document.getElementById('counter').innerText = count;
-        updateProgress();
-        if(count === target){
-          celebrate();
-        }
-      }
+    if (count < target) {
+      count++;
+      update();
+      if (count === target) celebrate();
     }
+  }
 
-    function updateProgress(){
-      const percent = (count / target) * 100;
-      document.getElementById('progress').style.width = percent + '%';
+  function update() {
+    const counterEl  = document.getElementById('counter');
+    const progressEl = document.getElementById('progress');
+    if (counterEl)  counterEl.textContent = count;
+    if (progressEl) {
+      const percent = target ? (count / target) * 100 : 0;
+      progressEl.style.width = percent + '%';
     }
+  }
 
-    function celebrate(){
-      document.getElementById('popup').style.display = 'flex';
-      for(let i=0; i<20; i++){
-        createBalloon();
-      }
-    }
+  function celebrate() {
+    const popup = document.getElementById('popup');
+    if (popup) popup.style.display = 'flex';
+    for (let i = 0; i < 25; i++) createBalloon();
+  }
 
-    function createBalloon(){
-      const balloon = document.createElement('div');
-      balloon.classList.add('balloon');
-      balloon.style.left = Math.random() * 100 + 'vw';
-      balloon.style.backgroundColor = randomColor
+  function createBalloon() {
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    b.style.left = Math.random() * 100 + 'vw';
+    b.style.backgroundColor = randomColor();
+    b.style.transform = `scale(${0.7 + Math.random() * 0.8})`;
+    b.style.animationDuration = (5 + Math.random() * 3) + 's';
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), 9000);
+  }
+
+  function randomColor() {
+    const colors = ['#f44336','#e91e63','#9c27b0','#3f51b5','#2196f3','#009688','#4caf50','#ff9800','#795548'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  function restart() {
+    count = 0;
+    update();
+    const popup = document.getElementById('popup');
+    if (popup) popup.style.display = 'none';
+  }
+
+  // initialize progress width on first load
+  document.addEventListener('DOMContentLoaded', update);
+</script>
