@@ -1,148 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dhikr Counter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: linear-gradient(to bottom, #001f3f, #0074D9);
-      color: white;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    h1 {
-      margin-top: 20px;
-      font-size: 2.5em;
-    }
-    p {
-      font-size: 1.3em;
-    }
-    #dhikr {
-      font-size: 2em;
-      margin: 20px 0;
-      font-weight: bold;
-      color: yellow;
-    }
-    #count {
-      font-size: 3em;
-      margin: 20px 0;
-    }
-    button {
-      font-size: 1.2em;
-      padding: 15px 30px;
-      margin: 10px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      background-color: #FFDC00;
-      color: black;
-      font-weight: bold;
-      box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
-    }
-    button:hover {
-      background-color: #FFD700;
-    }
-    /* Balloon style */
-    .balloon {
-      position: absolute;
-      bottom: -100px;
-      width: 40px;
-      height: 60px;
-      background: red;
-      border-radius: 50% 50% 50% 50%;
-      animation: floatUp 6s linear forwards;
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(-120vh); opacity: 0; }
-    }
-    #congrats {
-      font-size: 1.5em;
-      color: lightgreen;
-      margin-top: 20px;
-      font-weight: bold;
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <h1>Masha Allah</h1>
-  <p>This website was created by <b>Suleiman Alhassan</b></p>
+/* Balloon style */
+.balloon {
+  position: absolute;
+  bottom: -100px;
+  width: 40px;
+  height: 60px;
+  background: red;
+  border-radius: 50% 50% 50% 50%;
+  animation: floatUp 6s linear forwards;
+  z-index: 1; /* behind text */
+}
 
-  <div id="dhikr">Tap to Start Dhikr</div>
-  <div id="count">0</div>
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-120vh); opacity: 0; }
+}
 
-  <button onclick="countDhikr()">Tap</button>
-
-  <p id="congrats">🎉 Congratulations! You have completed your dhikr for today 🎉</p>
-
-  <!-- Audio for full completion -->
-  <audio id="endAudio" src="alhamdulillah.mp3"></audio>
-
-  <script>
-    const phrases = ["Subhanallah", "Alhamdulillah", "Allahu Akbar"];
-    let phraseIndex = 0;
-    let count = 0;
-    let totalCount = 0;
-
-    function countDhikr() {
-      count++;
-      totalCount++;
-
-      if (count > 33) {
-        count = 1;
-        phraseIndex++;
-      }
-
-      // When all 3 are completed (99 total)
-      if (phraseIndex >= phrases.length) {
-        phraseIndex = 0; 
-        totalCount = 0;
-
-        // Play audio
-        document.getElementById("endAudio").play();
-
-        // Show congratulations
-        document.getElementById("congrats").style.display = "block";
-        launchBalloons();
-
-        // Ask to continue
-        setTimeout(() => {
-          if (confirm("You have completed your dhikr for today. Would you like to continue?")) {
-            phraseIndex = 0;
-            count = 0;
-            document.getElementById("congrats").style.display = "none";
-          }
-        }, 500);
-      }
-
-      document.getElementById("dhikr").innerText = phrases[phraseIndex];
-      document.getElementById("count").innerText = count;
-    }
-
-    // 🎈 Balloons function
-    function launchBalloons() {
-      for (let i = 0; i < 15; i++) {
-        let balloon = document.createElement("div");
-        balloon.className = "balloon";
-        balloon.style.left = Math.random() * 100 + "vw";
-        balloon.style.background = getRandomColor();
-        document.body.appendChild(balloon);
-
-        setTimeout(() => {
-          balloon.remove();
-        }, 6000);
-      }
-    }
-
-    function getRandomColor() {
-      const colors = ["red", "blue", "green", "yellow", "pink", "orange", "purple"];
-      return colors[Math.floor(Math.random() * colors.length)];
-    }
-  </script>
-</body>
-</html>
+#congrats {
+  font-size: 1.5em;
+  color: lightgreen;
+  margin-top: 20px;
+  font-weight: bold;
+  display: none;
+  position: relative;
+  z-index: 10; /* always above balloons */
+}
