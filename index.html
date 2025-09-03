@@ -3,10 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome</title>
+  <title>Dhikr Counter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to bottom, #001f3f, #0074D9);
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5em;
+    }
+    p {
+      font-size: 1.3em;
+    }
+    #dhikr {
+      font-size: 2em;
+      margin: 20px 0;
+      font-weight: bold;
+      color: yellow;
+    }
+    #count {
+      font-size: 3em;
+      margin: 20px 0;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background-color: #FFDC00;
+      color: black;
+      font-weight: bold;
+      box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+    }
+    button:hover {
+      background-color: #FFD700;
+    }
+  </style>
 </head>
-<body style="text-align:center; font-family:Arial, sans-serif; background:#f0f8ff; padding:50px;">
-  <h1>Alhamdulillah</h1>
-  <p>This website was created by Suleiman Alhassan.</p>
+<body>
+  <h1>Masha Allah</h1>
+  <p>This website was created by <b>Suleiman Alhassan</b></p>
+
+  <div id="dhikr">Tap to Start Dhikr</div>
+  <div id="count">0</div>
+
+  <button onclick="countDhikr()">Tap</button>
+
+  <!-- Audio file (you can replace 'alhamdulillah.mp3' with your own file) -->
+  <audio id="endAudio" src="alhamdulillah.mp3"></audio>
+
+  <script>
+    const phrases = ["Subhanallah", "Alhamdulillah", "Allahu Akbar"];
+    let phraseIndex = 0;
+    let count = 0;
+    let totalCount = 0;
+
+    function countDhikr() {
+      count++;
+      totalCount++;
+
+      if (count > 33) {
+        count = 1;
+        phraseIndex++;
+        if (phraseIndex >= phrases.length) {
+          phraseIndex = 0; // reset to Subhanallah
+        }
+      }
+
+      // When full cycle (99) is complete → play Alhamdulillah
+      if (totalCount >= 99) {
+        document.getElementById("endAudio").play();
+        totalCount = 0; // reset total after each full cycle
+      }
+
+      document.getElementById("dhikr").innerText = phrases[phraseIndex];
+      document.getElementById("count").innerText = count;
+    }
+  </script>
 </body>
 </html>
