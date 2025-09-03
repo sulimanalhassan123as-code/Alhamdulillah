@@ -8,76 +8,60 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(to right, #1d4350, #a43931);
+      background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
       color: white;
-      margin: 0;
-      padding: 0;
-    }
-    header {
       padding: 20px;
     }
-    header img {
-      width: 120px;
-      margin-bottom: 10px;
+    img {
+      width: 150px;
+      margin: 20px auto;
+      display: block;
     }
-    header h1 {
-      font-size: 20px;
-      font-weight: bold;
+    h1 {
       color: gold;
     }
-    .counter {
-      margin: 40px 0;
-      font-size: 22px;
-    }
     button {
-      background: gold;
+      background-color: gold;
+      color: black;
       border: none;
       padding: 15px 30px;
       font-size: 18px;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
+      margin-top: 20px;
     }
     button:hover {
-      background: orange;
+      background-color: orange;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Suleiman Logo">
-    <h1>This site was created by Suleiman Alhassan</h1>
-  </header>
+  <!-- Logo -->
+  <img src="logo.png" alt="Suleiman Logo">
 
+  <!-- Title -->
+  <h1>This site was created by Suleiman Alhassan</h1>
   <h2>Tap to Count Your Dhikr</h2>
-  <div class="counter" id="counter">Subhanallah: 0 / 33</div>
+
+  <!-- Dhikr Counter -->
+  <p id="counter">0</p>
   <button onclick="countDhikr()">Tap</button>
 
-  <audio id="dhikrAudio" src="alhamdulillah.mp3"></audio>
+  <!-- Message -->
+  <p id="message"></p>
+
+  <!-- Audio -->
+  <audio id="dhikrAudio" src="subhanallahi-wa-bihamdihi-with-reverb-301504.mp3"></audio>
 
   <script>
-    let stage = 0;
     let count = 0;
-    const stages = [
-      { name: "Subhanallah", limit: 33 },
-      { name: "Alhamdulillah", limit: 33 },
-      { name: "Allahu Akbar", limit: 34 }
-    ];
-
+    const target = 33; // number of dhikr
     function countDhikr() {
-      if (stage < stages.length) {
-        count++;
-        if (count > stages[stage].limit) {
-          stage++;
-          count = 0;
-        }
-        if (stage < stages.length) {
-          document.getElementById("counter").innerText = 
-            stages[stage].name + ": " + count + " / " + stages[stage].limit;
-        } else {
-          document.getElementById("counter").innerText = 
-            "MashaAllah! You have completed your Dhikr.";
-          document.getElementById("dhikrAudio").play();
-        }
+      count++;
+      document.getElementById("counter").innerText = count;
+      if (count >= target) {
+        document.getElementById("message").innerText = "MashaAllah! You have completed your Dhikr.";
+        document.getElementById("dhikrAudio").play();
       }
     }
   </script>
